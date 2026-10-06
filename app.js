@@ -2,9 +2,11 @@ const express = require("express");
 
 const app = express();
 
+app.use(express.json());
+
 const PORT = 3000;
 
-const message = [
+const messages = [
     {
         id: 1,
         message: "I secretly enjoy debugging at 2 AM",
@@ -25,8 +27,19 @@ app.get('/', (req, res) => {
     );
 });
 
-app.get('/api/message', (req, res) => {
-    res.json(message);
+app.get('/api/messages', (req, res) => {
+    res.json(messages);
+});
+
+app.post('/api/messages', (req, res) => {
+    const newMessage = {
+        id: messages.length + 1,
+        message: req.body.message,
+        createdAt: new Date().toISOString(),
+    }
+
+    messages.push(newMessage);
+    res.status(201).json(newMessage);
 });
 
 app.listen(PORT, () => {
