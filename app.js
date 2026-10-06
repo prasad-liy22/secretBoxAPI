@@ -31,6 +31,20 @@ app.get('/api/messages', (req, res) => {
     res.json(messages);
 });
 
+app.get("/api/messages/:id", (req, res) => {
+
+    const messageId = Number((req.params.id));
+    const message = messages.find((msg) => (msg.id == messageId));
+
+    if (!message) {
+        return res.status(404).json({
+            message: "message not found"
+        });
+    }
+    
+    res.status(200).json(message);
+});
+
 app.post('/api/messages', (req, res) => {
     const newMessage = {
         id: messages.length + 1,
