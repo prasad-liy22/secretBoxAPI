@@ -53,7 +53,28 @@ app.post('/api/messages', (req, res) => {
     }
 
     messages.push(newMessage);
+
     res.status(201).json(newMessage);
+});
+
+app.delete("/api/messages/:id", (req, res) => {
+    
+    const messageId = Number(req.params.id);
+
+    const messageIdx = messages.findIndex((message) => message.id === messageId);
+
+    if (messageIdx === -1) {
+        return res.status(404).json({
+            message: "message not found"
+        });
+    }
+
+    const deletedMessage = messages.splice(messageIdx, 1);
+
+    res.json({
+        message: "Message deleted successfully",
+        deletedMessage: deletedMessage
+    });
 });
 
 app.listen(PORT, () => {
