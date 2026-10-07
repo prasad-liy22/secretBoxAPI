@@ -19,6 +19,8 @@ const messages = [
     }
 ];
 
+let nextId = messages.at(-1).id;
+
 app.get('/', (req, res) => {
     res.json({
         message: "secretBoxAPI is alive!",
@@ -47,10 +49,12 @@ app.get("/api/messages/:id", (req, res) => {
 
 app.post('/api/messages', (req, res) => {
     const newMessage = {
-        id: messages.length + 1,
+        id: nextId,
         message: req.body.message,
         createdAt: new Date().toISOString(),
     }
+
+    nextId++;
 
     messages.push(newMessage);
 
