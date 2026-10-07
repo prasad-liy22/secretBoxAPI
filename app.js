@@ -114,8 +114,26 @@ app.patch("/api/messages/:id", (req, res) => {
         return res.status(404).json({
             message: "message not found"
         });
-    }message
+    }
 
+    if (newMessage === undefined) {
+        return res.status(400).json({
+            message: "Message field is required"
+        });
+    }
+
+    if (typeof newMessage !== "string") {
+        return res.status(400).json({
+            message: "Message must be a string"
+        });
+    }
+
+    if (newMessage.trim() === "") {
+        return res.status(400).json({
+            message: "Message cannot be empty"
+        });
+    }
+    
     if (req.body.newMessage !== undefined) {
         message.message = req.body.newMessage;
     }
