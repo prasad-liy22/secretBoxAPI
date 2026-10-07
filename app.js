@@ -58,6 +58,24 @@ app.post('/api/messages', (req, res) => {
         createdAt: new Date().toISOString(),
     }
 
+    if (message === undefined) {
+        return res.status(400).json({
+            message: "Message field is required"
+        });
+    }
+
+    if (typeof message !== "string") {
+        return res.status(400).json({
+            message: "Message must be a string"
+        });
+    }
+
+    if (message.trim() === "") {
+        return res.status(400).json({
+            message: "Message cannot be empty"
+        });
+    }
+
     nextId++;
 
     messages.push(newMessage);
@@ -96,7 +114,7 @@ app.patch("/api/messages/:id", (req, res) => {
         return res.status(404).json({
             message: "message not found"
         });
-    }
+    }message
 
     if (req.body.newMessage !== undefined) {
         message.message = req.body.newMessage;
