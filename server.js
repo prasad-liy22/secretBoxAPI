@@ -1,6 +1,6 @@
 const express = require("express");
 
-const messageRoutes = require("./routes/messageRoutes");
+const messageRoutes = require("./routes/messageRoute");
 
 const app = express();
 
