@@ -1,10 +1,15 @@
 const {
     getAllMessages: findAllMessages,
-    getMessageById: findMessageById
+    getMessageById: findMessageById,
+    createMessage: insertMessage,
+    updateMessageById,
+    deleteMessageById
+
 } = require("../data/messageRepository");
 
 const getAllMessages = async (req, res, next) => {
     try{
+        // Retrieve and return all messages.
         const message = await findAllMessages();
         res.json(message);
     } catch(err) {
@@ -14,9 +19,11 @@ const getAllMessages = async (req, res, next) => {
 
 const getMessageById = async (req, res, next) => {
     try{
+        // Convert the route parameter to a numeric message ID.
         const messageId = Number(req.params.id);
         const message = await findMessageById(messageId);
 
+        // Return a not-found response when the message does not exist.
         if (!message) {
                 return res.status(404).json({
                     message: "Message not found"
@@ -30,67 +37,66 @@ const getMessageById = async (req, res, next) => {
 
 };
 
-const createMessage = (req, res) => {
-    const { message } = req.body;
+const createMessage = async (req, res, next) => {
+    try{
+        // Create a message from the request body.
+        const { message } = req.body;
 
+        const newMessage = await insertMessage(message);
 
-    const newMessage = {
-        id: getNextId(),
-        message: message,
-        createdAt: new Date().toISOString()
-    };
-
-    messages.push(newMessage);
-
-    res.status(201).json(newMessage);
+        res.status(201).json(newMessage);
+    } catch(err) {
+        next(err);
+    }
 };
 
-const updateMessage = (req, res) => {
-    const messageId = Number(req.params.id);
+const updateMessage = async (req, res, next) => {
+    try{
+        // Update the message identified by the route parameter.
+        const messageId = Number(req.params.id);
+        const newMessage = req.body;
 
-    const message = messages.find((msg) => msg.id === messageId);
+        const updateMessage = await updateMessageById(
+            messageId,
+            newMessage
+        );
 
-    if (!message) {
-        return res.status(404).json({
-            message: "Message not found"
+        if (!updateMessage) {
+            return res.status(404).json({
+                message: "Message not found"
+            });
+        }
+
+        res.json({
+            message: "message updated successfully",
+            updateMessage: updateMessage
         });
+    } catch (err) {
+        next(err);
     }
-
-    const { message: newMessage } = req.body;
-
-    if (newMessage === undefined) {
-        return res.status(400).json({
-            message: "Message field is required"
-        });
-    }
-
-    message.message = newMessage;
-
-    res.json({
-        message: "Message updated successfully",
-        updatedMessage: message
-    });
 };
 
-const deleteMessage = (req, res) => {
-    const messageId = Number(req.params.id);
+const deleteMessage = async (req, res, next) => {
+    try {
+        // Delete the message identified by the route parameter.
+        const messageId = Number(req.params.id);
 
-    const messageIndex = messages.findIndex(
-        (msg) => msg.id === messageId
-    );
+        const deletedMessage = await deleteMessageById(messageId);
 
-    if (messageIndex === -1) {
-        return res.status(404).json({
-            message: "Message not found"
+        // Return a not-found response when no message was deleted.
+        if (!deletedMessage) {
+            return res.status(404).json({
+                message: "Message not found"
+            });
+        }
+
+        res.json({
+            message: "Message deleted successfully",
+            deletedMessage: deletedMessage
         });
+    } catch (error) {
+        next(error);
     }
-
-    const deletedMessage = messages.splice(messageIndex, 1);
-
-    res.json({
-        message: "Message deleted successfully",
-        deletedMessage: deletedMessage[0]
-    });
 };
 
 module.exports = {
