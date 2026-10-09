@@ -27,31 +27,12 @@ const getMessageById = (req, res) => {
 const createMessage = (req, res) => {
     const { message } = req.body;
 
-    if (message === undefined) {
-        return res.status(400).json({
-            message: "Message field is required"
-        });
-    }
-
-    if (typeof message !== "string") {
-        return res.status(400).json({
-            message: "Message must be a string"
-        });
-    }
-
-    if (message.trim() === "") {
-        return res.status(400).json({
-            message: "Message cannot be empty"
-        });
-    }
 
     const newMessage = {
         id: getNextId(),
         message: message,
         createdAt: new Date().toISOString()
     };
-
-    nextId++;
 
     messages.push(newMessage);
 
@@ -74,18 +55,6 @@ const updateMessage = (req, res) => {
     if (newMessage === undefined) {
         return res.status(400).json({
             message: "Message field is required"
-        });
-    }
-
-    if (typeof newMessage !== "string") {
-        return res.status(400).json({
-            message: "Message must be a string"
-        });
-    }
-
-    if (newMessage.trim() === "") {
-        return res.status(400).json({
-            message: "Message cannot be empty"
         });
     }
 
