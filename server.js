@@ -2,6 +2,7 @@ const express = require("express");
 
 const messageRoutes = require("./routes/messageRoute");
 const errorHandler = require("./middleware/errorHandler");
+const notFound = require("./middleware/notFound");
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/messages", messageRoutes);
+
+app.use(notFound);
 
 app.use(errorHandler);
 
