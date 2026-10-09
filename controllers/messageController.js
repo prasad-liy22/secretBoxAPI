@@ -1,27 +1,33 @@
 const {
-    messages,
-    getMessages,
-    getNextId
+    getAllMessages: findAllMessages,
+    getMessageById: findMessageById
+} = require("../data/messageRepositroy");
 
-} = require("../data/messageStore");
-
-const getAllMessages = (req, res) => {
-    const message = getMessages();
-    res.json(message);
+const getAllMessages = async (req, res, next) => {
+    try{
+        const message = await findAllMessages();
+        res.json(message);
+    } catch(err) {
+        next(err);
+    }
 };
 
-const getMessageById = (req, res) => {
-    const messageId = Number(req.params.id);
+const getMessageById = async (req, res, next) => {
+    try{
+        const messageId = Number(req.params.id);
+        const message = await findMessageById(messageId);
 
-    const message = messages.find((msg) => msg.id === messageId);
-
-    if (!message) {
-        return res.status(404).json({
-            message: "Message not found"
-        });
+        if (!message) {
+                return res.status(404).json({
+                    message: "Message not found"
+                });
+            }
+        
+        res.json(message);
+    } catch(err) {
+        next(err);
     }
 
-    res.json(message);
 };
 
 const createMessage = (req, res) => {
