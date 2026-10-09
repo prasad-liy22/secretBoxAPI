@@ -8,15 +8,17 @@ const {
     deleteMessage
 } = require("../controllers/messageController");
 
+const validateMessage = require("../middleware/validateMessage");
+
 const router = express.Router();
 
 router.get("/", getAllMessages);
 
 router.get("/:id", getMessageById);
 
-router.post("/", createMessage);
+router.post("/", validateMessage, createMessage);
 
-router.patch("/:id", updateMessage);
+router.patch("/:id", validateMessage, updateMessage);
 
 router.delete("/:id", deleteMessage);
 
