@@ -1,20 +1,13 @@
-let nextId = 3;
+const {
+    messages,
+    getMessages,
+    getNextId
 
-const messages = [
-    {
-        id: 1,
-        message: "I secretly enjoy debugging at 2 AM",
-        createdAt: "2026-10-06"
-    },
-    {
-        id: 2,
-        message: "Sometimes I pretend I understand CSS completely",
-        createdAt: "2026-10-06"
-    }
-];
+} = require("../data/messageStore");
 
 const getAllMessages = (req, res) => {
-    res.json(messages);
+    const message = getMessages();
+    res.json(message);
 };
 
 const getMessageById = (req, res) => {
@@ -53,7 +46,7 @@ const createMessage = (req, res) => {
     }
 
     const newMessage = {
-        id: nextId,
+        id: getNextId(),
         message: message,
         createdAt: new Date().toISOString()
     };
