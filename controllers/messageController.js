@@ -1,7 +1,7 @@
 const {
     getAllMessages: findAllMessages,
     getMessageById: findMessageById
-} = require("../data/messageRepositroy");
+} = require("../data/messageRepository");
 
 const getAllMessages = async (req, res, next) => {
     try{
